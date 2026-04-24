@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!-- **************************************************************** -->
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -575,6 +576,122 @@
       .projects-grid { grid-template-columns: 1fr; }
       .about-stats { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── SKILLS ───────────────────────────────────────────────────── */
+    #skills { background: var(--bg3); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 0 4rem;
+    }
+
+    .skill-category-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--cyan);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .skill-category-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .skill-item { margin-bottom: 1rem; }
+
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.3rem;
+    }
+
+    .skill-name {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .skill-pct {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--cyan-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .skill-track {
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      position: relative;
+      overflow: visible;
+    }
+
+    .skill-fill {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .skill-fill::before {
+      content: '';
+      position: absolute;
+      top: 50%; right: -3px;
+      transform: translateY(-50%);
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan), 0 0 2px var(--cyan);
+      opacity: 0;
+      transition: opacity 0.2s 1s;
+    }
+
+    .skill-fill.animated::before { opacity: 1; }
+
+    .skills-tags-section { margin-top: 3.5rem; }
+
+    .skills-tags-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skills-tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .skill-cloud-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      background: rgba(0,212,255,0.03);
+      letter-spacing: 0.05em;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .skill-cloud-tag:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+      background: rgba(0,212,255,0.07);
+    }
   </style>
 </head>
 <body>
@@ -584,6 +701,7 @@
     <div class="nav-logo">AH.KANE<span style="color:var(--text-dim)"> // portfolio</span></div>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -594,13 +712,13 @@
     <div class="hero-content">
       <div class="hero-label">// hello world — welcome to my space</div>
       <h1 class="hero-name">Amadou<br>Hamady <span>KANE</span></h1>
-      <div class="hero-title">Digital Twin &amp; Data Engineer</div>
+      <div class="hero-title">Network Engineer &amp; AWS solution architectures</div>
       <p class="hero-desc">
-        IT &amp; Telecommunications Engineer specialising in <strong style="color:var(--cyan)">Digital Twins</strong>,
+        IT &amp; Telecommunications Engineer specialising in <strong style="color:var(--cyan)">In smart sensing, Computing and Networking</strong>,
         <strong style="color:var(--cyan)">IoT data pipelines</strong> and
         <strong style="color:var(--cyan)">AI-driven network systems</strong>.
-        Currently pursuing a Master in Industry of the Future &amp; Smart Manufacturing.
-        Based in <strong style="color:var(--cyan)">Luxembourg</strong>.
+        Currently pursuing a Master level 2 in Industry of the Future &amp; Smart Manufacturing.
+        Based in <strong style="color:var(--cyan)">Italy</strong>.
       </p>
       <div class="hero-btns">
         <a href="#projects" class="btn-primary">View Projects</a>
@@ -611,8 +729,8 @@
     <div class="hero-badge">
       <div style="color:var(--cyan);margin-bottom:0.4rem">// current_status</div>
       <div>role    : Master Student</div>
-      <div>focus   : Network engineering</div>
-      <div>stack   : Python · Kafka · </div>
+      <div>focus   : Network Engineering</div>
+      <div>stack   : Python</div>
       <div>location: Luxembourg 🇱🇺</div>
       <div>status  : <span style="color:#00ff88">● open_to_work</span></div>
     </div>
@@ -632,7 +750,7 @@
           of physical systems and digital intelligence.
         </p>
         <p>
-          Currently completing a <strong>Master in Industry of the Future &amp; Smart Manufacturing</strong>
+          Currently completing a level 2N <strong>Master in Industry of the Future &amp; Smart Manufacturing</strong>
           (Italy, 2025), where I've deepened my expertise in
           <strong>Digital Twin platforms</strong>, IoT sensor integration and
           smart city data architectures.
@@ -649,12 +767,11 @@
         </p>
 
         <div class="about-tags">
-          <!-- <span class="tag"></span> -->
+          <!-- <span class="tag">NGSI-LD</span> -->
           <span class="tag">Digital Twin</span>
-          <span class="tag">Kafka</span>
           <span class="tag">FastAPI</span>
           <span class="tag">Python</span>
-          <span class="tag">ReactJS</span>
+          <span class="tag">NodeJS</span>
           <span class="tag">PyTorch</span>
           <span class="tag">Federated Learning</span>
           <span class="tag">IoT / MQTT</span>
@@ -700,13 +817,12 @@
         <p class="project-desc">
           Designed and implemented a Local Digital Twin (LDT) framework integrating heterogeneous data sources —
           including environmental sensors, public datasets and telemetry feeds — into a unified operational model.
-          Applied semantic interoperability based on <strong style="color:var(--cyan)"></strong> and
-          Smart Data Models standards, building event-driven data pipelines for real-time city monitoring.
+          Applied semantic interoperability and Smart Data Models standards, building event-driven data pipelines for real-time city monitoring.
           Directly aligned with state-of-the-art smart city digital twin architectures.
         </p>
         <div class="project-stack">
           <span class="stack-tag">Digital Twin</span>
-          <!-- <span class="stack-tag"></span> -->
+          <!-- <span class="stack-tag">NGSI-LD</span> -->
           <span class="stack-tag">Smart Data Models</span>
           <span class="stack-tag">Python</span>
           <span class="stack-tag">IoT Sensors</span>
@@ -776,15 +892,182 @@
     </div>
   </section>
 
+  <!-- ── SKILLS ────────────────────────────────────────────────────── -->
+  <section id="skills">
+    <div class="section-label">// 03 — skills</div>
+    <h2 class="section-title">Technical Skills</h2>
+
+    <div class="skills-grid">
+
+      <!-- col 1 -->
+      <div class="reveal">
+        <div class="skill-category-title">Digital Twin & IoT</div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Digital Twin</span>
+            <span class="skill-pct">90%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">IoT / MQTT / Sensors</span>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="88"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Smart Data Models</span>
+            <span class="skill-pct">82%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="82"></div></div>
+        </div>
+
+        <div class="skill-category-title" style="margin-top:1.8rem">Data Engineering</div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Python</span>
+            <span class="skill-pct">92%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="92"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Data Pipelines / ETL</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"> S3 / FastAPI</span>
+            <span class="skill-pct">75%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="75"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">SQL</span>
+            <span class="skill-pct">78%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="78"></div></div>
+        </div>
+      </div>
+
+      <!-- col 2 -->
+      <div class="reveal">
+        <div class="skill-category-title">AI & Machine Learning</div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Federated Learning</span>
+            <span class="skill-pct">90%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Deep Reinforcement Learning</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">PyTorch / TensorFlow</span>
+            <span class="skill-pct">83%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="83"></div></div>
+        </div>
+
+        <div class="skill-category-title" style="margin-top:1.8rem">Full-Stack & Systems</div>
+
+        <!-- <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">JavaScript / NodeJS</span>
+            <span class="skill-pct">40%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="72"></div></div>
+        </div> -->
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Networking / SDN / VPN</span>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="88"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Linux / Git</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name">Java</span>
+            <span class="skill-pct">70%</span>
+          </div>
+          <div class="skill-track"><div class="skill-fill" data-pct="70"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- tag cloud -->
+    <div class="skills-tags-section reveal">
+      <div class="skills-tags-label">// all technologies</div>
+      <div class="skills-tags-cloud">
+        <!-- <span class="skill-cloud-tag">NGSI-LD</span> -->
+        <span class="skill-cloud-tag">Digital Twin</span>
+        <span class="skill-cloud-tag">FastAPI</span>
+        <span class="skill-cloud-tag">Python</span>
+        <span class="skill-cloud-tag">NodeJS</span>
+        <span class="skill-cloud-tag">PyTorch</span>
+        <span class="skill-cloud-tag">TensorFlow</span>
+        <span class="skill-cloud-tag">Flower (FL)</span>
+        <span class="skill-cloud-tag">Deep RL</span>
+        <span class="skill-cloud-tag">MQTT</span>
+        <span class="skill-cloud-tag">REST API</span>
+        <span class="skill-cloud-tag">S3</span>
+        <span class="skill-cloud-tag">SQL</span>
+        <span class="skill-cloud-tag">Git / GitHub</span>
+        <span class="skill-cloud-tag">Linux</span>
+        <span class="skill-cloud-tag">SDN / Ryu</span>
+        <span class="skill-cloud-tag">TLS Security</span>
+        <span class="skill-cloud-tag">ESP32 / Arduino</span>
+        <span class="skill-cloud-tag">Raspberry Pi</span>
+        <span class="skill-cloud-tag">VMware</span>
+        <span class="skill-cloud-tag">MATLAB</span>
+        <span class="skill-cloud-tag">Java</span>
+        <span class="skill-cloud-tag">PowerShell</span>
+        <span class="skill-cloud-tag">4G / 5G</span>
+        <span class="skill-cloud-tag">Mininet</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ── CONTACT ───────────────────────────────────────────────────── -->
   <section id="contact">
-    <div class="section-label">// 03 — contact</div>
+    <div class="section-label">// 04 — contact</div>
     <h2 class="section-title" style="text-align:center">Let's Connect</h2>
 
     <div class="contact-inner reveal">
       <p>
-        I'm currently open to internship and research opportunities in Digital Twin,
-        data engineering and smart city applications. Feel free to reach out.
+        I'm currently open to internship, job and research opportunities Telecommunications engineering and Network-AI. Feel free to reach out.
       </p>
 
       <div class="contact-links">
@@ -801,7 +1084,7 @@
           LinkedIn
         </a>
 
-        <a href="https://github.com/amadouh866" target="_blank" class="contact-link">
+        <a href="https://github.com/amadouh866"target="_blank" class="contact-link">
           <!-- github icon -->
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.19c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.49v-1.71c-2.78.62-3.37-1.37-3.37-1.37-.45-1.17-1.1-1.48-1.1-1.48-.9-.63.07-.62.07-.62 1 .07 1.52 1.05 1.52 1.05.89 1.56 2.33 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.38 9.38 0 012.5-.34c.85 0 1.7.11 2.5.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.81c0 .27.18.59.69.49A10.19 10.19 0 0022 12.19C22 6.58 17.52 2 12 2z"/></svg>
           GitHub
@@ -819,7 +1102,7 @@
     <p>Built with <span>HTML · CSS · JS</span> — Deployed on <span>GitHub Pages</span></p>
   </footer>
 
-  <!-- ── SCROLL REVEAL ─────────────────────────────────────────────── -->
+  <!-- ── SCROLL REVEAL + SKILL BARS ───────────────────────────────── -->
   <script>
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
@@ -830,6 +1113,21 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ── Skill bar animation ── */
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = entry.target;
+          const pct  = fill.getAttribute('data-pct');
+          fill.style.width = pct + '%';
+          fill.classList.add('animated');
+          barObserver.unobserve(fill);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.skill-fill').forEach(bar => barObserver.observe(bar));
   </script>
 
 </body>
