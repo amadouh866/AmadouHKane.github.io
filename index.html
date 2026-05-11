@@ -10,26 +10,43 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Sora:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     /* ── RESET & BASE ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #080d14;
-      --bg2:       #0d1520;
-      --bg3:       #111c2b;
+      --bg:        #050505;
+      --bg2:       #0a0a0a;
+      --bg3:       #0f0f0f;
       --cyan:      #00d4ff;
+      --purple:    #ff00ff;
+      --accent:    linear-gradient(90deg, #00d4ff, #ff00ff);
       --cyan-dim:  #0099bb;
       --blue:      #1b4f72;
       --blue-mid:  #2e86c1;
-      --text:      #cdd9e5;
-      --text-dim:  #6a8099;
-      --white:     #eef4fb;
-      --border:    rgba(0, 212, 255, 0.15);
-      --glow:      0 0 24px rgba(0, 212, 255, 0.25);
+      --text:      #d1d5db;
+      --text-dim:  #9ca3af;
+      --white:     #ffffff;
+      --border:    rgba(255, 255, 255, 0.08);
+      --glow:      0 0 30px rgba(0, 212, 255, 0.2);
+      --glow-accent: 0 0 30px rgba(255, 0, 255, 0.15);
       --font-mono: 'Share Tech Mono', monospace;
       --font-sans: 'Syne', sans-serif;
+      --font-body: 'Sora', sans-serif;
+      --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    [data-theme="light"] {
+      --bg:        #ffffff;
+      --bg2:       #f8f9fa;
+      --bg3:       #f1f3f5;
+      --text:      #212529;
+      --text-dim:  #495057;
+      --white:     #000000;
+      --border:    rgba(0, 0, 0, 0.08);
+      --glow:      0 10px 30px rgba(0, 212, 255, 0.1);
+      --glow-accent: 0 10px 30px rgba(255, 0, 255, 0.08);
     }
 
     html { scroll-behavior: smooth; }
@@ -37,10 +54,80 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-sans);
+      font-family: var(--font-body);
       font-size: 16px;
-      line-height: 1.7;
+      line-height: 1.8;
       overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    /* ── THEME TOGGLE ────────────────────────────────────────────── */
+    .theme-toggle {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-left: 2rem;
+    }
+
+    .theme-toggle:hover { border-color: var(--cyan); box-shadow: var(--glow); }
+    .theme-toggle svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .lang-select {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .lang-select:hover { border-color: var(--cyan); }
+
+    /* ── ANIMATED BACKGROUND ─────────────────────────────────────── */
+    .bg-blobs {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="light"] .bg-blobs { opacity: 0.15; }
+
+    .blob {
+      position: absolute;
+      width: 40vw; height: 40vw;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: move 20s infinite alternate;
+    }
+
+    .blob-2 {
+      background: var(--purple);
+      right: -10%; top: 20%;
+      animation-duration: 25s;
+      animation-delay: -5s;
+    }
+
+    @keyframes move {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(10vw, 20vh) scale(1.2); }
+      66%  { transform: translate(-5vw, 15vh) scale(0.8); }
+      100% { transform: translate(5vw, -10vh) scale(1); }
     }
 
     /* ── NOISE OVERLAY ────────────────────────────────────────────── */
@@ -48,16 +135,16 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 1000;
-      opacity: 0.4;
+      opacity: 0.3;
     }
 
     /* ── SCROLLBAR ────────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
     /* ── NAV ──────────────────────────────────────────────────────── */
     nav {
@@ -67,42 +154,47 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.1rem 4rem;
-      background: rgba(8, 13, 20, 0.85);
+      padding: 1.5rem 6rem;
+      background: rgba(5, 5, 5, 0.8);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      transition: var(--transition);
     }
 
     .nav-logo {
       font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--cyan);
+      font-size: 1rem;
+      color: var(--white);
       letter-spacing: 0.05em;
+      font-weight: 700;
     }
 
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-logo span { background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .nav-links { display: flex; gap: 3rem; list-style: none; }
 
     .nav-links a {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-dim);
       text-decoration: none;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      transition: color 0.2s;
+      transition: var(--transition);
       position: relative;
     }
+
+    .nav-links a:hover { color: var(--white); }
 
     .nav-links a::after {
       content: '';
       position: absolute;
-      bottom: -3px; left: 0;
+      bottom: -4px; left: 0;
       width: 0; height: 1px;
-      background: var(--cyan);
-      transition: width 0.3s;
+      background: var(--accent);
+      transition: var(--transition);
     }
 
-    .nav-links a:hover { color: var(--cyan); }
     .nav-links a:hover::after { width: 100%; }
 
     /* ── HERO ─────────────────────────────────────────────────────── */
@@ -110,7 +202,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 0 4rem;
+      padding: 0 6rem;
       position: relative;
       overflow: hidden;
     }
@@ -119,168 +211,135 @@
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      animation: gridMove 20s linear infinite;
+      background-image: 
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(circle at 30% 50%, black, transparent 80%);
     }
 
-    @keyframes gridMove {
-      0%   { background-position: 0 0; }
-      100% { background-position: 60px 60px; }
-    }
-
-    #hero::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 30%;
-      transform: translate(-50%, -50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content { position: relative; z-index: 2; max-width: 800px; }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; }
 
     .hero-label {
       font-family: var(--font-mono);
       font-size: 0.8rem;
       color: var(--cyan);
-      letter-spacing: 0.2em;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      margin-bottom: 1.2rem;
+      margin-bottom: 2rem;
       opacity: 0;
       animation: fadeUp 0.8s 0.2s forwards;
     }
 
     .hero-name {
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-size: clamp(3.5rem, 8vw, 7rem);
       font-weight: 800;
-      line-height: 1.05;
+      line-height: 0.95;
       color: var(--white);
-      letter-spacing: -0.02em;
-      margin-bottom: 0.6rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
       opacity: 0;
       animation: fadeUp 0.8s 0.4s forwards;
     }
 
-    .hero-name span { color: var(--cyan); }
+    .hero-name span { background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
     .hero-title {
       font-family: var(--font-mono);
-      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      font-size: clamp(1rem, 2vw, 1.4rem);
       color: var(--text-dim);
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
       opacity: 0;
       animation: fadeUp 0.8s 0.6s forwards;
     }
 
-    .hero-title::after {
-      content: '|';
-      color: var(--cyan);
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
     .hero-desc {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--text);
-      max-width: 560px;
+      max-width: 600px;
       line-height: 1.8;
-      margin-bottom: 2.8rem;
+      margin-bottom: 4rem;
       opacity: 0;
       animation: fadeUp 0.8s 0.8s forwards;
     }
 
     .hero-btns {
       display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
+      gap: 1.5rem;
       opacity: 0;
       animation: fadeUp 0.8s 1s forwards;
     }
 
     .btn-primary {
-      padding: 0.75rem 2rem;
-      background: var(--cyan);
+      padding: 1.2rem 3rem;
+      background: var(--accent);
       color: var(--bg);
       font-family: var(--font-mono);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
-      border: none;
-      cursor: pointer;
-      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-      transition: background 0.2s, box-shadow 0.2s;
+      transition: var(--transition);
+      border-radius: 4px;
     }
 
-    .btn-primary:hover { background: var(--white); box-shadow: var(--glow); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: var(--glow-accent); }
 
     .btn-outline {
-      padding: 0.75rem 2rem;
+      padding: 1.2rem 3rem;
       background: transparent;
-      color: var(--cyan);
+      color: var(--white);
       font-family: var(--font-mono);
-      font-size: 0.82rem;
-      letter-spacing: 0.12em;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
-      border: 1px solid var(--cyan);
-      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-      transition: background 0.2s, color 0.2s;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      border-radius: 4px;
     }
 
-    .btn-outline:hover { background: rgba(0,212,255,0.08); }
+    .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--white); }
 
     .hero-badge {
       position: absolute;
-      top: 30%; right: 6%;
+      top: 50%; right: 6%;
+      transform: translateY(-50%);
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--cyan-dim);
+      font-size: 0.75rem;
+      color: var(--text-dim);
       border: 1px solid var(--border);
-      padding: 1rem 1.2rem;
-      line-height: 2;
-      background: rgba(13, 21, 32, 0.8);
-      backdrop-filter: blur(6px);
+      padding: 2.5rem;
+      line-height: 2.2;
+      background: rgba(10, 10, 10, 0.5);
+      backdrop-filter: blur(20px);
+      border-radius: 12px;
       opacity: 0;
       animation: fadeUp 1s 1.2s forwards;
       display: none;
     }
 
-    @media (min-width: 1100px) { .hero-badge { display: block; } }
+    @media (min-width: 1200px) { .hero-badge { display: block; } }
 
     /* ── SECTION COMMON ───────────────────────────────────────────── */
-    section { padding: 6rem 4rem; }
+    section { padding: 10rem 6rem; }
 
     .section-label {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       color: var(--cyan);
-      letter-spacing: 0.25em;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
-      margin-bottom: 0.6rem;
+      margin-bottom: 1rem;
     }
 
     .section-title {
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-size: clamp(2.5rem, 5vw, 4rem);
       font-weight: 800;
       color: var(--white);
-      letter-spacing: -0.02em;
-      margin-bottom: 3rem;
-      position: relative;
-    }
-
-    .section-title::after {
-      content: '';
-      display: block;
-      width: 48px; height: 3px;
-      background: var(--cyan);
-      margin-top: 0.6rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 5rem;
     }
 
     /* ── ABOUT ────────────────────────────────────────────────────── */
@@ -348,88 +407,129 @@
 
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(300px, auto);
+      gap: 2rem;
     }
 
     .project-card {
       background: var(--bg2);
       border: 1px solid var(--border);
-      padding: 2rem;
+      padding: 3.5rem;
+      border-radius: 24px;
       position: relative;
       overflow: hidden;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      transition: var(--transition);
       cursor: default;
+      display: flex;
+      flex-direction: column;
+      grid-column: span 3;
     }
+
+    .project-card.featured { grid-column: span 4; grid-row: span 2; background: var(--bg3); }
+    .project-card.wide { grid-column: span 6; }
+    .project-card.small { grid-column: span 2; }
 
     .project-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--cyan), transparent);
+      height: 4px;
+      background: var(--accent);
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.4s;
+      transition: var(--transition);
     }
 
     .project-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0,212,255,0.35);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4), var(--glow);
+      transform: translateY(-12px);
+      border-color: var(--cyan);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), var(--glow);
     }
 
     .project-card:hover::before { transform: scaleX(1); }
 
     .project-year {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--cyan-dim);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.25em;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
     }
 
     .project-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
       color: var(--white);
-      margin-bottom: 0.8rem;
-      line-height: 1.3;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
     }
 
-    .project-desc {
-      font-size: 0.875rem;
+    /* ── Case Study Sections ── */
+    .project-case-study {
+      margin-bottom: 2.5rem;
+      flex: 1;
+    }
+
+    .cs-section { margin-bottom: 1.5rem; }
+    .cs-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .cs-text {
+      font-size: 0.95rem;
       color: var(--text-dim);
       line-height: 1.7;
-      margin-bottom: 1.4rem;
     }
 
-    .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .project-actions {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: auto;
+    }
+
+    .btn-action {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--white);
+      text-decoration: none;
+      padding: 0.8rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-action:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--white);
+      transform: translateX(4px);
+    }
+
+    .btn-action svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .project-stack { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 2rem; }
 
     .stack-tag {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
-      background: rgba(0,212,255,0.07);
-      color: var(--cyan-dim);
-      border: 1px solid rgba(0,212,255,0.2);
-      letter-spacing: 0.05em;
+      font-size: 0.7rem;
+      padding: 0.4rem 1.2rem;
+      background: rgba(255,255,255,0.03);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      border-radius: 100px;
     }
 
-    .project-card.featured { grid-column: span 2; background: var(--bg3); }
-    .project-card.featured .project-title { font-size: 1.3rem; }
-    .project-card.featured .project-desc  { font-size: 0.92rem; }
-
-    .featured-badge {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: var(--cyan);
-      border: 1px solid var(--cyan);
-      padding: 0.15rem 0.5rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.8rem;
+    @media (max-width: 1200px) {
+      .project-card, .project-card.featured, .project-card.small { grid-column: span 6; }
     }
 
     /* ── SKILLS ───────────────────────────────────────────────────── */
@@ -437,20 +537,20 @@
 
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 0 4rem;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 6rem;
     }
 
     .skill-category-title {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--cyan);
-      letter-spacing: 0.2em;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      margin-bottom: 1.2rem;
+      margin-bottom: 2.5rem;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 1rem;
     }
 
     .skill-category-title::after {
@@ -460,84 +560,70 @@
       background: var(--border);
     }
 
-    .skill-item { margin-bottom: 1rem; }
+    .skill-item { margin-bottom: 2rem; }
 
     .skill-meta {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.8rem;
     }
 
-    .skill-name { font-size: 0.85rem; color: var(--text); font-weight: 600; }
+    .skill-name { font-size: 1rem; color: var(--white); font-weight: 600; }
 
     .skill-pct {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--cyan-dim);
-      letter-spacing: 0.05em;
+      font-size: 0.8rem;
+      color: var(--text-dim);
     }
 
     .skill-track {
-      height: 3px;
-      background: rgba(255,255,255,0.06);
-      position: relative;
-      overflow: visible;
+      height: 6px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     .skill-fill {
-      position: absolute;
-      top: 0; left: 0;
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
-      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      background: var(--accent);
+      transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+      border-radius: 10px;
+      position: relative;
     }
 
-    .skill-fill::before {
-      content: '';
-      position: absolute;
-      top: 50%; right: -3px;
-      transform: translateY(-50%);
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 8px var(--cyan), 0 0 2px var(--cyan);
-      opacity: 0;
-      transition: opacity 0.2s 1s;
-    }
-
-    .skill-fill.animated::before { opacity: 1; }
-
-    .skills-tags-section { margin-top: 3.5rem; }
+    .skills-tags-section { margin-top: 8rem; }
 
     .skills-tags-label {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      letter-spacing: 0.15em;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      margin-bottom: 2.5rem;
     }
 
-    .skills-tags-cloud { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .skills-tags-cloud { display: flex; flex-wrap: wrap; gap: 0.8rem; }
 
     .skill-cloud-tag {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      padding: 0.25rem 0.7rem;
+      font-size: 0.75rem;
+      padding: 0.6rem 1.4rem;
       border: 1px solid var(--border);
       color: var(--text-dim);
-      background: rgba(0,212,255,0.03);
-      letter-spacing: 0.05em;
-      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      background: rgba(255,255,255,0.02);
+      border-radius: 100px;
+      transition: var(--transition);
       cursor: default;
     }
 
     .skill-cloud-tag:hover {
-      color: var(--cyan);
+      color: var(--white);
       border-color: var(--cyan);
-      background: rgba(0,212,255,0.07);
+      background: rgba(0,212,255,0.05);
+      box-shadow: var(--glow);
+      transform: translateY(-2px);
     }
 
     /* ── TIMELINE ─────────────────────────────────────────────────── */
@@ -545,301 +631,462 @@
 
     .timeline-tabs {
       display: flex;
-      gap: 0;
-      margin-bottom: 3rem;
+      gap: 2rem;
+      margin-bottom: 5rem;
       border-bottom: 1px solid var(--border);
     }
 
     .timeline-tab {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
-      padding: 0.7rem 1.8rem;
+      padding: 1rem 0;
       cursor: pointer;
       border: none;
       background: transparent;
       border-bottom: 2px solid transparent;
       margin-bottom: -1px;
-      transition: color 0.2s, border-color 0.2s;
+      transition: var(--transition);
     }
 
     .timeline-tab.active {
-      color: var(--cyan);
+      color: var(--white);
       border-bottom-color: var(--cyan);
     }
 
-    .timeline-tab:hover { color: var(--cyan); }
+    .timeline-tab:hover { color: var(--white); }
 
     .timeline-panel { display: none; }
     .timeline-panel.active { display: block; }
 
     .tl-wrap {
       position: relative;
-      padding-left: 2.5rem;
+      padding-left: 4rem;
     }
 
     /* vertical line */
     .tl-wrap::before {
       content: '';
       position: absolute;
-      left: 7px;
-      top: 6px;
+      left: 11px;
+      top: 10px;
       bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--cyan), transparent);
+      width: 2px;
+      background: linear-gradient(to bottom, var(--cyan), var(--purple), transparent);
     }
 
     .tl-item {
       position: relative;
-      margin-bottom: 2.4rem;
+      margin-bottom: 4rem;
       opacity: 0;
-      transform: translateX(-16px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateX(-30px) scale(0.95);
+      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     .tl-item.tl-visible {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateX(0) scale(1);
     }
 
     /* dot on the line */
     .tl-item::before {
       content: '';
       position: absolute;
-      left: -2.5rem;
-      top: 7px;
-      width: 10px; height: 10px;
+      left: -4rem;
+      top: 10px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       background: var(--bg2);
       border: 2px solid var(--cyan);
-      box-shadow: 0 0 8px var(--cyan);
+      box-shadow: var(--glow);
+      z-index: 2;
+      transform: translateX(50%);
     }
 
     /* current dot — filled */
     .tl-item.tl-current::before {
-      background: var(--cyan);
+      background: var(--accent);
+      border: none;
     }
 
     .tl-date {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--cyan-dim);
-      letter-spacing: 0.12em;
-      margin-bottom: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
     }
 
     .tl-title {
-      font-size: 1rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--white);
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.5rem;
     }
 
     .tl-org {
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--blue-mid);
-      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
     }
 
     .tl-desc {
-      font-size: 0.85rem;
+      font-size: 1rem;
       color: var(--text-dim);
-      line-height: 1.7;
-      max-width: 640px;
+      line-height: 1.8;
+      max-width: 700px;
     }
 
-    .tl-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
 
     .tl-tag {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
-      padding: 0.15rem 0.55rem;
-      border: 1px solid rgba(0,212,255,0.2);
-      color: var(--cyan-dim);
-      background: rgba(0,212,255,0.05);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.02);
+      border-radius: 4px;
     }
 
     /* ── CONTACT ──────────────────────────────────────────────────── */
     #contact { background: var(--bg); text-align: center; }
 
-    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-inner { max-width: 800px; margin: 0 auto; }
 
     .contact-inner p {
       color: var(--text-dim);
-      font-size: 0.97rem;
-      margin-bottom: 3rem;
+      font-size: 1.1rem;
+      margin-bottom: 5rem;
+      line-height: 1.8;
     }
 
     .contact-links {
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 2rem;
       flex-wrap: wrap;
-      margin-bottom: 3rem;
+      margin-bottom: 5rem;
     }
 
     .contact-link {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 1rem;
       font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--text-dim);
+      font-size: 0.9rem;
+      color: var(--white);
       text-decoration: none;
-      padding: 0.8rem 1.4rem;
+      padding: 1.2rem 2.5rem;
       border: 1px solid var(--border);
-      transition: color 0.2s, border-color 0.2s, background 0.2s;
-      letter-spacing: 0.08em;
+      border-radius: 8px;
+      transition: var(--transition);
+      letter-spacing: 0.1em;
+      background: rgba(255,255,255,0.02);
     }
 
     .contact-link:hover {
       color: var(--cyan);
       border-color: var(--cyan);
       background: rgba(0,212,255,0.05);
+      box-shadow: var(--glow);
+      transform: translateY(-5px);
     }
 
-    .contact-link svg { width: 16px; height: 16px; fill: currentColor; }
+    .contact-link svg { width: 20px; height: 20px; fill: currentColor; }
 
     .contact-email {
       font-family: var(--font-mono);
-      font-size: 1.1rem;
-      color: var(--cyan);
+      font-size: 1.5rem;
+      color: var(--white);
       text-decoration: none;
-      border-bottom: 1px solid var(--cyan);
-      padding-bottom: 2px;
-      transition: color 0.2s;
+      position: relative;
+      transition: var(--transition);
     }
 
-    .contact-email:hover { color: var(--white); }
+    .contact-email::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--accent);
+      transform: scaleX(0.3);
+      transition: var(--transition);
+    }
+
+    .contact-email:hover { color: var(--cyan); }
+    .contact-email:hover::after { transform: scaleX(1); }
 
     /* ── FOOTER ───────────────────────────────────────────────────── */
     footer {
-      padding: 1.5rem 4rem;
+      padding: 4rem 6rem;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: var(--bg);
     }
 
-    footer p { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); }
-    footer span { color: var(--cyan); }
+    footer p { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); }
+    footer span { color: var(--white); font-weight: 700; }
 
     /* ── ANIMATIONS ───────────────────────────────────────────────── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(30px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(40px) scale(0.98);
+      transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
 
     /* ── RESPONSIVE ───────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 2rem; }
-      section { padding: 4rem 2rem; }
-      #hero { padding: 0 2rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    @media (max-width: 1100px) {
+      nav { padding: 1.5rem 3rem; }
+      section { padding: 8rem 3rem; }
+      #hero { padding: 0 3rem; }
+      .projects-grid { grid-template-columns: 1fr; }
       .project-card.featured { grid-column: span 1; }
-      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      footer { padding: 3rem; flex-direction: column; gap: 1rem; text-align: center; }
     }
 
     @media (max-width: 600px) {
-      .nav-links { gap: 1rem; font-size: 0.68rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .about-stats { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; } /* Mobile nav enhancement suggested later */
+      .hero-name { font-size: 3.5rem; }
+      .hero-btns { flex-direction: column; }
+      .about-stats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+  <!-- ── ANIMATED BACKGROUND ─────────────────────────────────────── -->
+  <div class="bg-blobs">
+    <div class="blob"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
   <!-- ── NAV ──────────────────────────────────────────────────────── -->
   <nav>
-    <div class="nav-logo">AH.KANE<span style="color:var(--text-dim)"> // portfolio</span></div>
+    <div class="nav-logo">AMADOU<span>.KANE</span></div>
     <ul class="nav-links">
+      <li><a href="#projects">Work</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#timeline">Journey</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <div class="nav-controls" style="display:flex; align-items:center; gap:1rem;">
+      <select class="lang-select" id="lang-select" title="Change Language">
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="it">IT</option>
+      </select>
+
+      <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+        <svg class="sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zM2 13h2a1 1 0 100-2H2a1 1 0 100 2zm18 0h2a1 1 0 100-2h-2a1 1 0 100 2zM11 2v2a1 1 0 100 2V2a1 1 0 100-2zm0 18v2a1 1 0 100 2v-2a1 1 0 100-2zM5.99 4.58a1 1 0 10-1.41 1.41l1.41-1.41zm12.02 12.02a1 1 0 10-1.41 1.41l1.41-1.41zm-12.02 0l-1.41 1.41a1 1 0 101.41-1.41zm12.02-12.02l-1.41 1.41a1 1 0 101.41-1.41z"/></svg>
+        <svg class="moon" style="display:none" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
   </nav>
 
   <!-- ── HERO ─────────────────────────────────────────────────────── -->
-  <section id="hero">
+  <section id="hero" style="min-height: 85vh;">
     <div class="hero-content">
-      <div class="hero-label">// hello world — welcome to my space</div>
-      <h1 class="hero-name">Amadou<br>Hamady <span>KANE</span></h1>
-      <div class="hero-title">Network Engineer &amp; AWS Solution Architect</div>
-      <p class="hero-desc">
-        IT &amp; Telecommunications Engineer specialising in <strong style="color:var(--cyan)">Smart Sensing, Computing and Networking</strong>,
-        <strong style="color:var(--cyan)">IoT data pipelines</strong> and
-        <strong style="color:var(--cyan)">AI-driven network systems</strong>.
-        Currently pursuing a Master Level 2 in Industry of the Future &amp; Smart Manufacturing.
-        Based in <strong style="color:var(--cyan)">Italy</strong>.
-      </p>
+      <div class="hero-label" data-i18n="hero_welcome">// welcome to my digital space</div>
+      <h1 class="hero-name" data-i18n="hero_name">Amadou<br>Hamady <span>KANE</span></h1>
+      <div class="hero-title" data-i18n="hero_role">Network Engineer &amp; AI/Cloud Solutions Architect</div>
+      <p class="hero-desc" data-i18n="hero_desc">Designing intelligent, scalable systems at the intersection of Telecommunications, IoT and AI. Currently pursuing a Master Level 2 in Industry of the Future & Smart Manufacturing.</p>
       <div class="hero-btns">
-        <a href="#projects" class="btn-primary">View Projects</a>
-        <a href="#contact" class="btn-outline">Get in Touch</a>
+        <a href="#projects" class="btn-primary" data-i18n="hero_btn_work">Selected Work</a>
+        <a href="#contact" class="btn-outline" data-i18n="hero_btn_contact">Get in Touch</a>
       </div>
     </div>
 
     <div class="hero-badge">
-      <div style="color:var(--cyan);margin-bottom:0.4rem">// current_status</div>
-      <div>role    : Master Student</div>
-      <div>focus   : Network Engineering</div>
-      <div>stack   : Python</div>
-      <div>location: Luxembourg 🇱🇺</div>
-      <div>status  : <span style="color:#00ff88">● open_to_work</span></div>
+      <div style="color:var(--cyan);margin-bottom:0.8rem" data-i18n="hero_badge_status">// current_status</div>
+      <div><span data-i18n="hero_badge_role_label">role</span>    : <span data-i18n="hero_badge_role">Master Student</span></div>
+      <div><span data-i18n="hero_badge_focus_label">focus</span>   : <span data-i18n="hero_badge_focus">Network Engineering</span></div>
+      <div>stack   : Python · AWS · IoT</div>
+      <div><span data-i18n="hero_badge_loc_label">location</span>: Luxembourg 🇱🇺</div>
+      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border)">
+        status  : <span style="color:#00ff88">● <span data-i18n="hero_badge_open">open_to_work</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ───────────────────────────────────────────────────── -->
+  <section id="projects">
+    <div class="section-label" data-i18n="projects_label">// 01 — selected work</div>
+    <h2 class="section-title" data-i18n="projects_title">Case Studies</h2>
+
+    <div class="projects-grid">
+      <!-- Project 1: Featured & Large -->
+      <div class="project-card featured reveal">
+        <div class="project-year">2025 — MIF Master</div>
+        <div class="project-title" data-i18n="proj1_title">Digital Twin & Smart City Data Integration</div>
+        
+        <div class="project-case-study">
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_challenge_label">The Challenge</span>
+            <p class="cs-text" data-i18n="proj1_challenge">Smart cities face massive semantic fragmentation. My goal was to integrate environmental sensors and public telemetry into a unified, interoperable Local Digital Twin (LDT) model.</p>
+          </div>
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_approach_label">The Approach</span>
+            <p class="cs-text" data-i18n="proj1_approach">Designed an event-driven pipeline using Python and Smart Data Models (FIWARE). Built automated data mappers for real-time synchronization between edge sensors and the digital model.</p>
+          </div>
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_impact_label">The Impact</span>
+            <p class="cs-text" data-i18n="proj1_impact">Achieved seamless real-time monitoring across 3 disparate data streams. Validated against European smart city standards for operational digital twins.</p>
+          </div>
+        </div>
+
+        <div class="project-actions">
+          <a href="#" class="btn-action" data-i18n="btn_full_case">
+            <svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.41l-9.29 9.29-1.42-1.42L17.59 5H14V3zM19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7z"/></svg>
+            Full Case Study
+          </a>
+        </div>
+
+        <div class="project-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">FIWARE</span>
+          <span class="stack-tag">Digital Twin</span>
+          <span class="stack-tag">MQTT</span>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card reveal">
+        <div class="project-year">2024 — Research</div>
+        <div class="project-title" data-i18n="proj2_title">Federated Learning Research Platform</div>
+        
+        <div class="project-case-study">
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_challenge_label">The Challenge</span>
+            <p class="cs-text" data-i18n="proj2_challenge">Training AI models on private data without centralized collection. Managing resource-constrained nodes in a non-IID network environment.</p>
+          </div>
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_impact_label">The Impact</span>
+            <p class="cs-text" data-i18n="proj2_impact">Developed a DRL-based client selection algorithm that optimized model convergence speed while preserving 100% data privacy.</p>
+          </div>
+        </div>
+
+        <div class="project-actions">
+          <a href="https://github.com/amadouh866" target="_blank" class="btn-action" data-i18n="btn_view_code">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.19c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.49v-1.71c-2.78.62-3.37-1.37-3.37-1.37-.45-1.17-1.1-1.48-1.1-1.48-.9-.63.07-.62.07-.62 1 .07 1.52 1.05 1.52 1.05.89 1.56 2.33 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.38 9.38 0 012.5-.34c.85 0 1.7.11 2.5.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.81c0 .27.18.59.69.49A10.19 10.19 0 0022 12.19C22 6.58 17.52 2 12 2z"/></svg>
+            View Code
+          </a>
+        </div>
+
+        <div class="project-stack">
+          <span class="stack-tag">PyTorch</span>
+          <span class="stack-tag">Flower</span>
+          <span class="stack-tag">DRL</span>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card reveal">
+        <div class="project-year">2023 — IoT</div>
+        <div class="project-title" data-i18n="proj3_title">Smart Greenhouse Ecosystem</div>
+        
+        <div class="project-case-study">
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_challenge_label">The Challenge</span>
+            <p class="cs-text" data-i18n="proj3_challenge">Building a resilient, secure end-to-end monitoring system for agricultural environments with limited connectivity and power.</p>
+          </div>
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_approach_label">The Approach</span>
+            <p class="cs-text" data-i18n="proj3_approach">Deployed ESP32 sensor mesh nodes communicating via TLS-secured MQTT to a Raspberry Pi gateway with real-time analytics.</p>
+          </div>
+        </div>
+
+        <div class="project-actions">
+          <a href="https://github.com/amadouh866" target="_blank" class="btn-action" data-i18n="btn_source_code">Source Code</a>
+        </div>
+
+        <div class="project-stack">
+          <span class="stack-tag">ESP32</span>
+          <span class="stack-tag">MQTT</span>
+          <span class="stack-tag">Raspberry Pi</span>
+        </div>
+      </div>
+
+      <!-- Project 4: Wide -->
+      <div class="project-card wide reveal">
+        <div class="project-year">2023 — Networking</div>
+        <div class="project-title" data-i18n="proj4_title">SDN Routing Optimization: Dijkstra vs A*</div>
+        
+        <div class="project-case-study" style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_challenge_label">The Challenge</span>
+            <p class="cs-text" data-i18n="proj4_challenge">Dynamically optimizing routing in Software-Defined Networks (SDN) to minimize latency and CPU overhead during peak loads.</p>
+          </div>
+          <div class="cs-section">
+            <span class="cs-label" data-i18n="cs_impact_label">The Impact</span>
+            <p class="cs-text" data-i18n="proj4_impact">Quantified performance trade-offs; A* outperformed Dijkstra in specific mesh topologies by reducing hop count by 15% with minimal CPU increase.</p>
+          </div>
+        </div>
+
+        <div class="project-actions">
+          <a href="#" class="btn-action" data-i18n="btn_tech_report">Technical Report</a>
+          <a href="https://github.com/amadouh866" target="_blank" class="btn-action" data-i18n="btn_topology_repo">Topology Repo</a>
+        </div>
+
+        <div class="project-stack">
+          <span class="stack-tag">Ryu Controller</span>
+          <span class="stack-tag">Mininet</span>
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">MATLAB</span>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ── ABOUT ─────────────────────────────────────────────────────── -->
   <section id="about">
-    <div class="section-label">// 01 — about</div>
-    <h2 class="section-title">Who I Am</h2>
+    <div class="section-label" data-i18n="about_label">// 02 — background</div>
+    <h2 class="section-title" data-i18n="about_title">The Intersection of Systems &amp; Intelligence</h2>
 
     <div class="about-grid">
       <div class="about-text reveal">
-        <p>
-          I'm an IT &amp; Telecommunications Engineer with a background spanning
-          <strong>network engineering</strong>, <strong>AI research</strong> and
-          <strong>full-stack development</strong>. My work sits at the intersection
-          of physical systems and digital intelligence.
+        <p data-i18n="about_p1">
+          I am an IT &amp; Telecommunications Engineer driven by the challenge of bridging 
+          physical infrastructure with digital intelligence. 
+          My expertise spans high-performance networking, AI-driven optimization, and cloud-native architectures.
         </p>
-        <p>
-          Currently completing a Level 2 <strong>Master in Industry of the Future &amp; Smart Manufacturing</strong>
-          (Italy, 2025), where I've deepened my expertise in
-          <strong>Digital Twin platforms</strong>, IoT sensor integration and
-          smart city data architectures.
+        <p data-i18n="about_p2">
+          Currently completing a Level 2 Master in Industry of the Future &amp; Smart Manufacturing 
+          in Italy, I am focused on the next generation of industrial systems: 
+          Digital Twins, real-time IoT pipelines, and autonomous data models.
         </p>
-        <p>
-          Prior to this, my Master's research at the University of Calabria focused on
-          <strong>Federated Learning</strong> and <strong>Deep Reinforcement Learning</strong>
-          applied to network optimisation — published as technical research reports for
-          the Telecom Laboratory.
+        <p data-i18n="about_p3">
+          My research foundations were built at the University of Calabria, where I explored 
+          Federated Learning and Deep Reinforcement Learning 
+          to solve complex network resource allocation problems.
         </p>
-        <p>
-          I'm trilingual <strong>FR / EN / IT</strong> and I thrive in
+        <p data-i18n="about_p4">
+          I'm trilingual FR / EN / IT and I thrive in
           multicultural, research-oriented environments.
         </p>
         <div class="about-tags">
           <span class="tag">Digital Twin</span>
-          <span class="tag">FastAPI</span>
+          <span class="tag">Smart City</span>
+          <span class="tag">AWS</span>
           <span class="tag">Python</span>
-          <span class="tag">NodeJS</span>
+          <span class="tag">FastAPI</span>
           <span class="tag">PyTorch</span>
           <span class="tag">Federated Learning</span>
           <span class="tag">IoT / MQTT</span>
-          <span class="tag">SDN / Ryu</span>
-          <span class="tag">TLS Security</span>
+          <span class="tag">SDN</span>
           <span class="tag">Git</span>
         </div>
       </div>
@@ -851,98 +1098,15 @@
         </div>
         <div class="stat-card">
           <div class="stat-number">3</div>
-          <div class="stat-label">Languages spoken (FR / EN / IT)</div>
+          <div class="stat-label">Languages (FR / EN / IT)</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">2</div>
-          <div class="stat-label">Master's degrees completed</div>
+          <div class="stat-label">Master's degrees</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">5+</div>
-          <div class="stat-label">End-to-end projects delivered</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── PROJECTS ───────────────────────────────────────────────────── -->
-  <section id="projects">
-    <div class="section-label">// 02 — projects</div>
-    <h2 class="section-title">Selected Work</h2>
-
-    <div class="projects-grid">
-      <div class="project-card featured reveal">
-        <div class="featured-badge">★ Featured</div>
-        <div class="project-year">2025 — MIF Master</div>
-        <div class="project-title">Digital Twin &amp; Smart City Data Integration</div>
-        <p class="project-desc">
-          Designed and implemented a Local Digital Twin (LDT) framework integrating heterogeneous data sources —
-          including environmental sensors, public datasets and telemetry feeds — into a unified operational model.
-          Applied semantic interoperability and Smart Data Models standards, building event-driven data pipelines for real-time city monitoring.
-          Directly aligned with state-of-the-art smart city digital twin architectures.
-        </p>
-        <div class="project-stack">
-          <span class="stack-tag">Digital Twin</span>
-          <span class="stack-tag">Smart Data Models</span>
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">IoT Sensors</span>
-          <span class="stack-tag">Event-Driven Arch.</span>
-          <span class="stack-tag">Data Pipelines</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-year">2024 – 2025 — University of Calabria</div>
-        <div class="project-title">Federated Learning Research Platform</div>
-        <p class="project-desc">
-          Built a distributed test environment for Federated Learning across heterogeneous nodes.
-          Developed Deep Reinforcement Learning models for network performance optimisation.
-          Managed full data pipeline: collection, integrity checks, versioning and reproducibility.
-        </p>
-        <div class="project-stack">
-          <span class="stack-tag">PyTorch</span>
-          <span class="stack-tag">TensorFlow</span>
-          <span class="stack-tag">Flower (FL)</span>
-          <span class="stack-tag">Deep RL</span>
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">Git</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-year">2023 — University of Calabria</div>
-        <div class="project-title">Smart Greenhouse IoT System</div>
-        <p class="project-desc">
-          End-to-end IoT deployment: sensor network (ESP32, Arduino), MQTT broker, Raspberry Pi gateway,
-          TLS-secured communications and a real-time web dashboard. Integrated live telemetry for
-          temperature, humidity and environment — a complete data pipeline from edge to interface.
-        </p>
-        <div class="project-stack">
-          <span class="stack-tag">ESP32</span>
-          <span class="stack-tag">Arduino</span>
-          <span class="stack-tag">MQTT</span>
-          <span class="stack-tag">Raspberry Pi</span>
-          <span class="stack-tag">TLS</span>
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">Web Dashboard</span>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-year">2023 — University of Calabria</div>
-        <div class="project-title">SDN Routing Optimisation — Dijkstra vs A*</div>
-        <p class="project-desc">
-          Deployed a Software-Defined Networking topology with Ryu controller. Benchmarked
-          Dijkstra and A* routing algorithms on latency, CPU load and hop count.
-          Quantitative analysis with Python (Matplotlib, Pandas) and MATLAB. Git-managed codebase.
-        </p>
-        <div class="project-stack">
-          <span class="stack-tag">SDN</span>
-          <span class="stack-tag">Ryu</span>
-          <span class="stack-tag">Mininet</span>
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">MATLAB</span>
-          <span class="stack-tag">VirtualBox</span>
+          <div class="stat-label">Major projects delivered</div>
         </div>
       </div>
     </div>
@@ -1223,6 +1387,338 @@
 
   <!-- ── SCRIPTS ───────────────────────────────────────────────────── -->
   <script>
+    /* ── Translation Dictionary ── */
+    const translations = {
+      en: {
+        work: "Work",
+        about: "About",
+        skills: "Skills",
+        journey: "Journey",
+        contact: "Contact",
+        hero_welcome: "// welcome to my digital space",
+        hero_role: "Network Engineer & AI/Cloud Solutions Architect",
+        hero_desc: "Designing intelligent, scalable systems at the intersection of Telecommunications, IoT and AI. Currently pursuing a Master Level 2 in Industry of the Future & Smart Manufacturing.",
+        hero_btn_work: "Selected Work",
+        hero_btn_contact: "Get in Touch",
+        hero_badge_status: "// current_status",
+        hero_badge_role_label: "role",
+        hero_badge_role: "Master Student",
+        hero_badge_focus_label: "focus",
+        hero_badge_focus: "Network Engineering",
+        hero_badge_loc_label: "location",
+        hero_badge_open: "open_to_work",
+        projects_label: "// 01 — selected work",
+        projects_title: "Case Studies",
+        proj1_title: "Digital Twin & Smart City Data Integration",
+        cs_challenge_label: "The Challenge",
+        proj1_challenge: "Smart cities face massive semantic fragmentation. My goal was to integrate environmental sensors and public telemetry into a unified, interoperable Local Digital Twin (LDT) model.",
+        cs_approach_label: "The Approach",
+        proj1_approach: "Designed an event-driven pipeline using Python and Smart Data Models (FIWARE). Built automated data mappers for real-time synchronization between edge sensors and the digital model.",
+        cs_impact_label: "The Impact",
+        proj1_impact: "Achieved seamless real-time monitoring across 3 disparate data streams. Validated against European smart city standards for operational digital twins.",
+        btn_full_case: "Full Case Study",
+        proj2_title: "Federated Learning Research Platform",
+        proj2_challenge: "Training AI models on private data without centralized collection. Managing resource-constrained nodes in a non-IID network environment.",
+        proj2_impact: "Developed a DRL-based client selection algorithm that optimized model convergence speed while preserving 100% data privacy.",
+        btn_view_code: "View Code",
+        proj3_title: "Smart Greenhouse Ecosystem",
+        proj3_challenge: "Building a resilient, secure end-to-end monitoring system for agricultural environments with limited connectivity and power.",
+        proj3_approach: "Deployed ESP32 sensor mesh nodes communicating via TLS-secured MQTT to a Raspberry Pi gateway with real-time analytics.",
+        btn_source_code: "Source Code",
+        proj4_title: "SDN Routing Optimization: Dijkstra vs A*",
+        proj4_challenge: "Dynamically optimizing routing in Software-Defined Networks (SDN) to minimize latency and CPU overhead during peak loads.",
+        proj4_impact: "Quantified performance trade-offs; A* outperformed Dijkstra in specific mesh topologies by reducing hop count by 15% with minimal CPU increase.",
+        btn_tech_report: "Technical Report",
+        btn_topology_repo: "Topology Repo",
+        about_label: "// 02 — background",
+        about_title: "The Intersection of Systems & Intelligence",
+        about_p1: "I am an IT & Telecommunications Engineer driven by the challenge of bridging physical infrastructure with digital intelligence. My expertise spans high-performance networking, AI-driven optimization, and cloud-native architectures.",
+        about_p2: "Currently completing a Level 2 Master in Industry of the Future & Smart Manufacturing in Italy, I am focused on the next generation of industrial systems: Digital Twins, real-time IoT pipelines, and autonomous data models.",
+        about_p3: "My research foundations were built at the University of Calabria, where I explored Federated Learning and Deep Reinforcement Learning to solve complex network resource allocation problems.",
+        about_p4: "I'm trilingual FR / EN / IT and I thrive in multicultural, research-oriented environments.",
+        skills_label: "// 03 — skills",
+        skills_title: "Technical Skills",
+        skill_cat_iot: "Digital Twin & IoT",
+        skill_dt: "Digital Twin",
+        skill_iot: "IoT / MQTT / Sensors",
+        skill_dm: "Smart Data Models",
+        skill_cat_data: "Data Engineering",
+        skill_etl: "Data Pipelines / ETL",
+        skill_cat_ai: "AI & Machine Learning",
+        skill_fl: "Federated Learning",
+        skill_drl: "Deep Reinforcement Learning",
+        skill_cat_sys: "Full-Stack & Systems",
+        skill_net: "Networking / SDN / VPN",
+        skills_all: "// all technologies",
+        journey_label: "// 04 — journey",
+        journey_title: "Experience & Education",
+        tab_exp: "Experience",
+        tab_edu: "Education",
+        exp1_title: "Research Engineer — AI & Networks",
+        exp1_org: "Telecommunication Laboratory · University of Calabria · Italy",
+        exp1_desc: "Designed a distributed test environment for Federated Learning across heterogeneous nodes. Developed Deep Reinforcement Learning models for network performance optimisation.",
+        exp2_title: "AI System Tester — Vodafone Project",
+        exp2_org: "SISEM Telecommunication · Rende, Italy",
+        exp2_desc: "Tested NLP chatbot accuracy, language coverage and pipeline reliability for Vodafone.",
+        exp3_title: "Network Engineering Intern",
+        exp3_org: "SISEM Telecommunication · Dakar, Senegal / Italy",
+        exp3_desc: "Performed RF field measurements and Drive Test assessments on mobile infrastructure.",
+        edu1_title: "Master in Industry of the Future & Smart Manufacturing (Level 2)",
+        edu1_desc: "Focus: Digital Twins & Simulation, IoT, Data Analytics, Extended Reality, Collaborative Robotics.",
+        edu2_title: "Back-End Development Training",
+        edu2_desc: "Fundamentals, Intermediate and Advanced levels. REST APIs, FastAPI, database management.",
+        edu3_title: "Master's Degree — Telecommunication Engineering",
+        edu3_org: "University of Calabria · Italy",
+        contact_label: "// 05 — contact",
+        contact_title: "Let's Connect",
+        contact_desc: "I'm currently open to internship, job and research opportunities in Telecommunications engineering and Network-AI. Feel free to reach out.",
+        btn_email: "Email",
+        footer_built: "Built with",
+        footer_deploy: "Deployed on"
+      },
+      fr: {
+        work: "Projets",
+        about: "À Propos",
+        skills: "Compétences",
+        journey: "Parcours",
+        contact: "Contact",
+        hero_welcome: "// bienvenue dans mon espace numérique",
+        hero_role: "Ingénieur Réseaux & Architecte Solutions IA/Cloud",
+        hero_desc: "Conception de systèmes intelligents et évolutifs à l'intersection des télécommunications, de l'IoT et de l'IA. Actuellement en Master Niveau 2 en Industrie du Futur & Smart Manufacturing.",
+        hero_btn_work: "Mes Projets",
+        hero_btn_contact: "Me Contacter",
+        hero_badge_status: "// statut_actuel",
+        hero_badge_role_label: "rôle",
+        hero_badge_role: "Étudiant en Master",
+        hero_badge_focus_label: "focus",
+        hero_badge_focus: "Ingénierie Réseaux",
+        hero_badge_loc_label: "lieu",
+        hero_badge_open: "disponible",
+        projects_label: "// 01 — réalisations",
+        projects_title: "Études de Cas",
+        proj1_title: "Jumeau Numérique & Intégration Smart City",
+        cs_challenge_label: "Le Défi",
+        proj1_challenge: "Les villes intelligentes font face à une fragmentation sémantique massive. Mon objectif était d'intégrer des capteurs environnementaux et la télémétrie publique dans un modèle de Jumeau Numérique Local (LDT) unifié.",
+        cs_approach_label: "L'Approche",
+        proj1_approach: "Conception d'un pipeline piloté par événements avec Python et Smart Data Models (FIWARE). Création de mappeurs de données automatisés pour la synchro en temps réel.",
+        cs_impact_label: "L'Impact",
+        proj1_impact: "Surveillance en temps réel fluide sur 3 flux de données disparates. Validé selon les normes européennes pour les jumeaux numériques opérationnels.",
+        btn_full_case: "Étude Complète",
+        proj2_title: "Plateforme de Recherche en Federated Learning",
+        proj2_challenge: "Entraînement de modèles d'IA sur des données privées sans collecte centralisée. Gestion de nœuds aux ressources limitées.",
+        proj2_impact: "Développement d'un algorithme de sélection de clients basé sur le DRL optimisant la convergence tout en préservant 100% de la confidentialité.",
+        btn_view_code: "Voir le Code",
+        proj3_title: "Écosystème de Serre Intelligente",
+        proj3_challenge: "Construction d'un système de surveillance résilient et sécurisé pour les environnements agricoles avec connectivité limitée.",
+        proj3_approach: "Déploiement de nœuds capteurs ESP32 via MQTT sécurisé (TLS) vers une passerelle Raspberry Pi avec analyses en temps réel.",
+        btn_source_code: "Code Source",
+        proj4_title: "Optimisation du Routage SDN : Dijkstra vs A*",
+        proj4_challenge: "Optimisation dynamique du routage dans les réseaux SDN pour minimiser la latence et la charge CPU.",
+        proj4_impact: "Analyse des compromis de performance ; A* a surpassé Dijkstra dans certaines topologies en réduisant le nombre de sauts de 15%.",
+        btn_tech_report: "Rapport Technique",
+        btn_topology_repo: "Dépôt Topologie",
+        about_label: "// 02 — parcours",
+        about_title: "L'Intersection des Systèmes & de l'Intelligence",
+        about_p1: "Je suis un ingénieur en informatique et télécommunications motivé par le défi de relier l'infrastructure physique à l'intelligence numérique. Mon expertise couvre les réseaux haute performance et l'IA.",
+        about_p2: "Actuellement en Master Niveau 2 en Italie, je me concentre sur la prochaine génération de systèmes industriels : Jumeaux Numériques et pipelines IoT.",
+        about_p3: "Mes bases en recherche ont été construites à l'Université de Calabre, où j'ai exploré le Federated Learning et le Deep RL.",
+        about_p4: "Je suis trilingue FR / EN / IT et j'évolue dans des environnements multiculturels et orientés recherche.",
+        skills_label: "// 03 — compétences",
+        skills_title: "Compétences Techniques",
+        skill_cat_iot: "Jumeau Numérique & IoT",
+        skill_dt: "Jumeau Numérique",
+        skill_iot: "IoT / MQTT / Capteurs",
+        skill_dm: "Smart Data Models",
+        skill_cat_data: "Ingénierie de Données",
+        skill_etl: "Pipelines / ETL",
+        skill_cat_ai: "IA & Machine Learning",
+        skill_fl: "Apprentissage Fédéré",
+        skill_drl: "Deep RL",
+        skill_cat_sys: "Full-Stack & Systèmes",
+        skill_net: "Réseaux / SDN / VPN",
+        skills_all: "// technologies",
+        journey_label: "// 04 — parcours",
+        journey_title: "Expérience & Éducation",
+        tab_exp: "Expérience",
+        tab_edu: "Éducation",
+        exp1_title: "Ingénieur Recherche — IA & Réseaux",
+        exp1_org: "Laboratoire Télécom · Université de Calabre · Italie",
+        exp1_desc: "Conception d'un environnement de test distribué pour le Federated Learning. Développement de modèles Deep RL.",
+        exp2_title: "Testeur de Systèmes IA — Projet Vodafone",
+        exp2_org: "SISEM Telecommunication · Rende, Italie",
+        exp2_desc: "Test de la précision de chatbots NLP et de la fiabilité des pipelines pour Vodafone.",
+        exp3_title: "Stagiaire Ingénierie Réseaux",
+        exp3_org: "SISEM Telecommunication · Dakar / Italie",
+        exp3_desc: "Mesures RF sur le terrain et tests Drive Test sur l'infrastructure mobile.",
+        edu1_title: "Master Industrie du Futur & Smart Manufacturing (Niv. 2)",
+        edu1_desc: "Focus : Jumeaux Numériques, Simulation, IoT, Robotique Collaborative.",
+        edu2_title: "Formation Développement Back-End",
+        edu2_org: "CNFPC · Luxembourg",
+        edu2_desc: "Fondamentaux et Avancé. API REST, FastAPI, gestion de bases de données.",
+        edu3_title: "Master — Ingénierie des Télécommunications",
+        edu3_org: "Université de Calabre · Italie",
+        contact_label: "// 05 — contact",
+        contact_title: "Contactez-moi",
+        contact_desc: "Je suis actuellement ouvert aux opportunités de stage et d'emploi en ingénierie télécom et IA. N'hésitez pas à me joindre.",
+        btn_email: "E-mail",
+        footer_built: "Développé avec",
+        footer_deploy: "Déployé sur"
+      },
+      it: {
+        work: "Progetti",
+        about: "Chi Sono",
+        skills: "Competenze",
+        journey: "Percorso",
+        contact: "Contatti",
+        hero_welcome: "// benvenuti nel mio spazio digitale",
+        hero_role: "Ingegnere di Rete & Architetto Soluzioni AI/Cloud",
+        hero_desc: "Progettazione di sistemi intelligenti e scalabili all'intersezione tra telecomunicazioni, IoT e AI. Attualmente frequento un Master di II livello in Industry of the Future & Smart Manufacturing.",
+        hero_btn_work: "I Miei Progetti",
+        hero_btn_contact: "Contattami",
+        hero_badge_status: "// stato_attuale",
+        hero_badge_role_label: "ruolo",
+        hero_badge_role: "Studente Master",
+        hero_badge_focus_label: "focus",
+        hero_badge_focus: "Ingegneria di Rete",
+        hero_badge_loc_label: "luogo",
+        hero_badge_open: "disponibile",
+        projects_label: "// 01 — realizzazioni",
+        projects_title: "Casi di Studio",
+        proj1_title: "Digital Twin & Integrazione Smart City",
+        cs_challenge_label: "La Sfida",
+        proj1_challenge: "Le smart city affrontano una massiccia frammentazione semantica. Il mio obiettivo era integrare sensori ambientali e telemetria pubblica in un modello Local Digital Twin (LDT) unificato.",
+        cs_approach_label: "L'Approccio",
+        proj1_approach: "Progettazione di una pipeline guidata dagli eventi con Python e Smart Data Models (FIWARE). Creati mappatori di dati automatizzati per la sincronizzazione in tempo reale.",
+        cs_impact_label: "L'Impatto",
+        proj1_impact: "Monitoraggio in tempo reale senza interruzioni su 3 flussi di dati disparati. Validato secondo gli standard europei per i digital twin operativi.",
+        btn_full_case: "Studio Completo",
+        proj2_title: "Piattaforma di Ricerca in Federated Learning",
+        proj2_challenge: "Addestramento di modelli AI su dati privati senza raccolta centralizzata. Gestione di nodi con risorse limitate in ambienti non-IID.",
+        proj2_impact: "Sviluppato un algoritmo di selezione dei client basato su DRL che ha ottimizzato la velocità di convergenza preservando al 100% la privacy.",
+        btn_view_code: "Vedi Codice",
+        proj3_title: "Ecosistema di Serra Intelligente",
+        proj3_challenge: "Costruzione di un sistema di monitoraggio resiliente e sicuro per ambienti agricoli con connettività limitata.",
+        proj3_approach: "Distribuzione di nodi sensori ESP32 via MQTT sicuro (TLS) verso un gateway Raspberry Pi con analisi in tempo reale.",
+        btn_source_code: "Codice Sorgente",
+        proj4_title: "Ottimizzazione del Routing SDN: Dijkstra vs A*",
+        proj4_challenge: "Ottimizzazione dinamica del routing nelle reti SDN per ridurre al minimo la latenza e il carico della CPU.",
+        proj4_impact: "Analisi dei compromis di prestazioni; A* ha superato Dijkstra in specifiche topologie riducendo il numero di salti del 15%.",
+        btn_tech_report: "Rapporto Tecnico",
+        btn_topology_repo: "Repo Topologia",
+        about_label: "// 02 — chi sono",
+        about_title: "L'Intersezione tra Sistemi e Intelligenza",
+        about_p1: "Sono un ingegnere informatico e delle telecomunicazioni motivato dalla sfida di collegare l'infrastruttura fisica all'intelligenza digitale. La mia esperienza copre reti ad alte prestazioni e AI.",
+        about_p2: "Attualmente frequento un Master di II livello in Italia, concentrandomi sulla prossima generazione di sistemi industriali: Digital Twin e pipeline IoT.",
+        about_p3: "Le mie basi nella ricerca sono state costruite all'Università della Calabria, dove ho esplorato il Federated Learning e il Deep RL.",
+        about_p4: "Sono trilingue FR / EN / IT e mi trovo a mio agio in ambienti multiculturali e orientati alla ricerca.",
+        skills_label: "// 03 — competenze",
+        skills_title: "Competenze Tecniche",
+        skill_cat_iot: "Digital Twin & IoT",
+        skill_dt: "Digital Twin",
+        skill_iot: "IoT / MQTT / Sensori",
+        skill_dm: "Smart Data Models",
+        skill_cat_data: "Ingegneria dei Dati",
+        skill_etl: "Pipeline / ETL",
+        skill_cat_ai: "AI & Machine Learning",
+        skill_fl: "Federated Learning",
+        skill_drl: "Deep RL",
+        skill_cat_sys: "Full-Stack & Sistemi",
+        skill_net: "Reti / SDN / VPN",
+        skills_all: "// tecnologie",
+        journey_label: "// 04 — percorso",
+        journey_title: "Esperienza & Istruzione",
+        tab_exp: "Esperienza",
+        tab_edu: "Istruzione",
+        exp1_title: "Ingegnere di Ricerca — AI & Reti",
+        exp1_org: "Laboratorio Telecom · Università della Calabria · Italia",
+        exp1_desc: "Progettazione di un ambiente di test distribuito per il Federated Learning. Sviluppo di modelli Deep RL.",
+        exp2_title: "Tester di Sistemi AI — Progetto Vodafone",
+        exp2_org: "SISEM Telecommunication · Rende, Italia",
+        exp2_desc: "Test della precisione di chatbot NLP e della affidabilità delle pipeline per Vodafone.",
+        exp3_title: "Tirocinante Ingegneria di Rete",
+        exp3_org: "SISEM Telecommunication · Dakar / Italia",
+        exp3_desc: "Misurazioni RF sul campo e test Drive Test sull'infrastruttura mobile.",
+        edu1_title: "Master in Industry of the Future & Smart Manufacturing (Liv. 2)",
+        edu1_desc: "Focus: Digital Twin, Simulazione, IoT, Robotica Collaborativa.",
+        edu2_title: "Formazione Sviluppo Back-End",
+        edu2_org: "CNFPC · Lussemburgo",
+        edu2_desc: "Fondamenti e Avanzato. API REST, FastAPI, gestione database.",
+        edu3_title: "Laurea Magistrale — Ingegneria delle Telecomunicazioni",
+        edu3_org: "Università della Calabria · Italia",
+        contact_label: "// 05 — contatti",
+        contact_title: "Contattami",
+        contact_desc: "Sono attualmente aperto a opportunità di tirocinio e lavoro nell'ingegneria delle telecomunicazioni e AI. Non esitate a contattarmi.",
+        btn_email: "E-mail",
+        footer_built: "Sviluppato con",
+        footer_deploy: "Distribuito su"
+      }
+    };
+
+    /* ── Language Switcher Logic ── */
+    const langSelect = document.getElementById('lang-select');
+    
+    const setLanguage = (lang) => {
+      langSelect.value = lang;
+      localStorage.setItem('lang', lang);
+      document.documentElement.lang = lang;
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.innerText = translations[lang][key];
+        }
+      });
+      
+      // Update specific components if needed
+      updateNavLinks(lang);
+    };
+
+    const updateNavLinks = (lang) => {
+      const navKeys = {
+        '#projects': 'work',
+        '#about': 'about',
+        '#skills': 'skills',
+        '#timeline': 'journey',
+        '#contact': 'contact'
+      };
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        const key = navKeys[a.getAttribute('href')];
+        if (key && translations[lang][key]) a.innerText = translations[lang][key];
+      });
+    };
+
+    langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+
+    // Initialize Language
+    const savedLang = localStorage.getItem('lang') || 'en';
+    setLanguage(savedLang);
+
+    /* ── Theme Toggle Logic ── */
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = themeToggle.querySelector('.sun');
+    const moonIcon = themeToggle.querySelector('.moon');
+
+    const setTheme = (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      if (theme === 'light') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+    };
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
     /* ── Scroll reveal ── */
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
